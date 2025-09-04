@@ -146,13 +146,7 @@ Thank you for dining with us!
 
           {/* Action Buttons */}
           <div className="space-y-3">
-            <button
-              onClick={() => dispatch({ type: 'SET_PAGE', payload: 'tracking' })}
-              className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-4 px-6 rounded-lg transition-colors duration-200"
-            >
-              Track Order
-            </button>
-            
+             
             <button
               onClick={() => dispatch({ type: 'SET_PAGE', payload: 'menu' })}
               className="w-full border-2 border-red-500 text-red-500 hover:bg-red-50 font-semibold py-3 px-6 rounded-lg transition-colors duration-200"

@@ -8,7 +8,7 @@ export function Navbar() {
   const cartItemsCount = cart.reduce((total, item) => total + item.quantity, 0);
 
   return (
-    <nav className="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-40">
+    <nav className="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-40 block sm:hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div 
@@ -16,7 +16,7 @@ export function Navbar() {
             onClick={() => dispatch({ type: 'SET_PAGE', payload: 'home' })}
           >
             <Utensils className="h-8 w-8 text-red-500" />
-            <span className="text-xl font-bold text-gray-900">The Urban Kitchen</span>
+            <span className="text-xl font-bold text-gray-900">QR Restaurant</span>
           </div>
           
           <button

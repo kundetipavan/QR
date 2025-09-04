@@ -34,13 +34,7 @@ export function PaymentPage() {
     { id: 'cash', label: 'Cash', icon: Banknote }
   ];
 
-  const digitalWallets = [
-    { id: 'google-pay', label: 'Google Pay', color: 'text-blue-600' },
-    { id: 'apple-pay', label: 'Apple Pay', color: 'text-gray-900' },
-    { id: 'paytm', label: 'Paytm', color: 'text-blue-500' },
-    { id: 'paypal', label: 'PayPal', color: 'text-blue-700' }
-  ];
-
+ 
   const handleContinueToPayment = () => {
     if (selectedPaymentMethod === 'cash') {
       handlePayment();
@@ -271,14 +265,7 @@ export function PaymentPage() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-20 md:pb-8">
-      <button
-        onClick={() => dispatch({ type: 'SET_PAGE', payload: 'orders' })}
-        className="flex items-center text-gray-600 hover:text-gray-900 mb-6 transition-colors"
-      >
-        <ArrowLeft className="h-5 w-5 mr-2" />
-        Back to Orders
-      </button>
-
+ 
       <h1 className="text-2xl font-bold text-gray-900 mb-6">Payment Methods</h1>
       
       {/* Saved Cards */}
@@ -321,51 +308,29 @@ export function PaymentPage() {
 
       {/* Other Payment Methods */}
       <div className="mb-8">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Other Payment Methods</h2>
-        <div className="grid grid-cols-2 gap-3">
+        <h2 className="text-sm font-semibold text-gray-900 mb-4">Other Payment Methods</h2>
+        <div className="grid grid-cols-4 gap-3">
           {otherMethods.map((method) => {
             const Icon = method.icon;
             return (
               <button
                 key={method.id}
                 onClick={() => setSelectedPaymentMethod(method.id)}
-                className={`border-2 rounded-lg p-4 text-center transition-all duration-200 ${
+                className={` border-2 rounded-lg p-2 text-center transition-all duration-200 ${
                   selectedPaymentMethod === method.id 
                     ? 'border-red-500 bg-red-50' 
                     : 'border-gray-200 hover:border-gray-300'
                 }`}
               >
-                <Icon className="h-6 w-6 mx-auto mb-2 text-red-500" />
-                <div className="font-medium text-gray-900">{method.label}</div>
+                <Icon className="h-4 w-4 mx-auto mb-2 text-red-500" />
+                <div className="font-small text-gray-900">{method.label}</div>
               </button>
             );
           })}
         </div>
       </div>
 
-      {/* Digital Wallets */}
-      <div className="mb-8">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Digital Wallets</h2>
-        <div className="grid grid-cols-4 gap-3">
-          {digitalWallets.map((wallet) => (
-            <button
-              key={wallet.id}
-              onClick={() => setSelectedPaymentMethod(wallet.id)}
-              className={`border-2 rounded-lg p-3 text-center transition-all duration-200 ${
-                selectedPaymentMethod === wallet.id 
-                  ? 'border-red-500 bg-red-50' 
-                  : 'border-gray-200 hover:border-gray-300'
-              }`}
-            >
-              <div className={`text-2xl font-bold mb-1 ${wallet.color}`}>
-                {wallet.label.charAt(0)}
-              </div>
-              <div className="text-xs font-medium text-gray-900">{wallet.label}</div>
-            </button>
-          ))}
-        </div>
-      </div>
-
+ 
       {/* Order Summary */}
       <div className="bg-gray-50 rounded-lg p-4 mb-6">
         <div className="space-y-2">

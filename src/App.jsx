@@ -1,4 +1,5 @@
 import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AppProvider, useApp } from './contexts/AppContext';
 import { Navbar } from './components/Navbar';
 import { BottomNavigation } from './components/BottomNavigation';
@@ -12,6 +13,7 @@ import { ReceiptPage } from './components/ReceiptPage';
 import { ItemDetailsModal } from './components/ItemDetailsModal';
 import { OTPModal } from './components/OTPModal';
 import { Toast } from './components/Toast';
+import { TopNavigation } from './components/TopNavigation';
 
 function AppContent() {
   const { currentPage } = useApp();
@@ -25,6 +27,7 @@ function AppContent() {
       case 'payment': return <PaymentPage />;
       case 'tracking': return <OrderTrackingPage />;
       case 'receipt': return <ReceiptPage />;
+      case 'itemdetails': return <ItemDetailsModal />;
       default: return <HomePage />;
     }
   };
@@ -32,7 +35,10 @@ function AppContent() {
   const isHomePage = currentPage === 'home';
 
   return (
+    
     <div className="min-h-screen bg-gray-50">
+            <TopNavigation />
+
       {/* Show Navbar only if NOT home */}
       {!isHomePage && <Navbar />}
       
@@ -49,6 +55,12 @@ function AppContent() {
       
       {/* Toast Notifications */}
       <Toast />
+              <Router>
+      <Routes>
+         <Route path="/pizza" element={<ItemDetailsModal />} />
+       </Routes>
+    </Router>
+
     </div>
   );
 }

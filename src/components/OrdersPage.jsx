@@ -7,10 +7,10 @@ export function OrdersPage() {
 
   if (orders.length === 0) {
     return (
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-20 md:pb-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-20 md:pb-8 pt-12">
         <div className="text-center py-16">
-          <ShoppingBag className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">No Orders Yet</h2>
+          <ShoppingBag className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+          <h2 className="text-xl font-bold text-gray-900 mb-2">No Orders Yet</h2>
           <p className="text-gray-600 mb-6">Start ordering to see your orders here</p>
           <button
             onClick={() => dispatch({ type: 'SET_PAGE', payload: 'menu' })}
@@ -25,24 +25,19 @@ export function OrdersPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-20 md:pb-8">
-      <button
-        onClick={() => dispatch({ type: 'SET_PAGE', payload: 'home' })}
-        className="flex items-center text-gray-600 hover:text-gray-900 mb-6 transition-colors"
-      >
-        <ArrowLeft className="h-5 w-5 mr-2" />
-        Back to Home
-      </button>
-
+ 
       <h1 className="text-2xl font-bold text-gray-900 mb-6">Your Orders</h1>
       
-      <div className="space-y-6">
-        {orders.map((order) => (
-          <OrderCard key={order.id} order={order} dispatch={dispatch} />
-        ))}
-      </div>
+<div className="space-y-6">
+  {orders
+    .filter(order => order.status !== 'paid') // 👈 hide paid orders
+    .map((order) => (
+      <OrderCard key={order.id} order={order} dispatch={dispatch} />
+    ))}
+</div>
                   <button
               onClick={() => dispatch({ type: 'SET_PAGE', payload: 'tracking' })}
-              className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-4 px-6 rounded-lg transition-colors duration-200"
+              className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200"
             >
               Track Order
             </button>

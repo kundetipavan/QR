@@ -6,7 +6,12 @@ export function HomePage() {
   const { dispatch } = useApp();
 
   return (
-    <div className="w-screen h-screen flex flex-col items-center justify-center bg-white overflow-hidden px-6 border w-[20em] h-[20em]">
+    <section className="flex flex-col items-center justify-center py-[10em]">
+<div
+  className="w-[18em] h-[20em] flex flex-col items-center justify-center bg-white 
+  border border-gray-300 shadow-lg rounded-2xl p-6 
+  transition-all duration-300 hover:shadow-2xl hover:border-red-400  "
+>
       {/* Logo */}
       <div className="bg-green-100 rounded-full w-20 h-20 flex items-center justify-center mb-6">
         <Utensils className="w-10 h-10 text-red-500" />
@@ -15,7 +20,7 @@ export function HomePage() {
       {/* Welcome Text */}
       <p className="text-gray-500 text-sm mb-1">Welcome to</p>
       <h1 className="text-2xl font-bold text-gray-900 mb-4 text-center">
-       QR Reataurant
+       QR Restaurant
       </h1>
 
       {/* Table Number */}
@@ -31,5 +36,6 @@ export function HomePage() {
         View Menu
       </button>
     </div>
+    </section>
   );
 }

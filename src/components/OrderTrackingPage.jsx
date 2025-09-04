@@ -133,18 +133,7 @@ export function OrderTrackingPage() {
           Back to Menu
         </button>
 
-        {/* Receipt Options 
-        <div className="flex space-x-3 mt-6">
-          <button className="flex-1 border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2">
-            <Printer className="h-4 w-4" />
-            <span>Print Receipt</span>
-          </button>
-          <button className="flex-1 border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2">
-            <Mail className="h-4 w-4" />
-            <span>Email Receipt</span>
-          </button>
-        </div>*/}
-      </div>
+       </div>
     </div>
   );
 }
