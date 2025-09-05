@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { AppProvider, useApp } from './contexts/AppContext';
-import { Navbar } from './components/Navbar';
+ {/*import { Navbar } from './components/Navbar'; */ }
 import { BottomNavigation } from './components/BottomNavigation';
 import { HomePage } from './components/HomePage';
 import { MenuPage } from './components/MenuPage';
@@ -10,10 +9,11 @@ import { OrdersPage } from './components/OrdersPage';
 import { PaymentPage } from './components/PaymentPage';
 import { OrderTrackingPage } from './components/OrderTrackingPage';
 import { ReceiptPage } from './components/ReceiptPage';
-  import { TopNavigation } from './components/TopNavigation';
-import Disserts from './components/disserts';
-import { ItemDetailsModal } from './components/ItemDetailsModal';
- 
+import Disserts from './components/categories/disserts';
+import { MenuCardDetail } from './components/MenuCardDetail';
+import { ItemDetailsModal } from './components/ItemDetails';
+import { OTPModal } from './components/OTPModal';
+
 function AppContent() {
   const { currentPage } = useApp();
 
@@ -21,9 +21,9 @@ function AppContent() {
     switch (currentPage) {
       case 'home': return <HomePage />;
       case 'menu': return <MenuPage />;
-       case 'orders': return <OrdersPage />;
+      case 'orders': return <OrdersPage />;
       case 'payment': return <PaymentPage />;
-       default: return <HomePage />;
+      default: return <HomePage />;
     }
   };
 
@@ -33,34 +33,34 @@ function AppContent() {
 
     <div className="min-h-screen bg-gray-50">
 
-      <TopNavigation />
+      {!isHomePage && <Disserts />}
 
-      {!isHomePage &&  <Disserts /> }
+      {/* {!isHomePage &&  <Navbar />} */}
+
  
-       {!isHomePage && <Navbar />}
 
-      <main className="relative">
-        {renderPage()}
-      </main>
+      {!isHomePage && <BottomNavigation />}
 
-       {!isHomePage && <BottomNavigation />}
 
-  
-       <Routes>
-        <Route path="/cart" element={< ItemDetailsModal />} />
+
+
+      <Routes>
+        <Route path="/cart" element={<MenuCardDetail />} />
         <Route path="/tracking" element={<OrderTrackingPage />} />
-        <Route path="/itemdetails" element={<ItemDetailsModal />} />
         <Route path="/receipt" element={<ReceiptPage />} />
         <Route path="/pizza" element={<Disserts />} />
-        </Routes>
-       </div>
+        <Route path="/itemdetails" element={<ItemDetailsModal />} />
+        <Route path="/otp" element={<OTPModal />} />
+      
+       </Routes>
+    </div>
   );
 }
 
 function App() {
   return (
     <BrowserRouter>
-      <AppProvider>
+   <ItemDetailsModal />
         <Routes>
           <Route path="/" element={<Navigate to="/home" replace />} />
           <Route path="/home/*" element={<AppContent />} />
@@ -70,10 +70,9 @@ function App() {
           <Route path="/payment/*" element={<AppContent />} />
           <Route path="/tracking/*" element={<AppContent />} />
           <Route path="/receipt/*" element={<AppContent />} />
-           <Route path="*" element={<Navigate to="/home" replace />} />
-        </Routes>
-      </AppProvider>
-    </BrowserRouter>
+         </Routes>
+
+     </BrowserRouter>
   );
 }
 

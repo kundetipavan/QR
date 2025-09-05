@@ -6,7 +6,7 @@ const AppContext = createContext();
 const initialState = {
   cart: [],
   orders: [],
-  currentPage: 'home',
+  currentPage: false,
   selectedMenuItem: null,
   showItemModal: false,
   showOTPModal: false,
@@ -19,7 +19,13 @@ const initialState = {
 function appReducer(state, action) {
   switch (action.type) {
     case 'SET_PAGE':
-      return { ...state, currentPage: action.payload };
+      return { 
+        ...state, 
+        currentPage: action.payload,
+        // Reset modals when changing pages
+        showItemModal: false,
+        showOTPModal: false 
+      };
     
     case 'SHOW_ITEM_MODAL':
       return { 
@@ -126,10 +132,17 @@ export function AppProvider({ children }) {
     dispatch({ type: 'LOAD_PERSISTED_DATA' });
   }, []);
 
-  // Add navigation effect
-  useEffect(() => {
-    navigate(`/${state.currentPage}`);
-  }, [state.currentPage, navigate]);
+  const navigateToPage = (page) => {
+    // Handle special cases
+    if (page === 'cart' && state.cart.length === 0) {
+      addToast('Your cart is empty', 'info');
+      return;
+    }
+
+    // Update state and navigate
+    dispatch({ type: 'SET_PAGE', payload: page });
+    navigate(page === 'home' ? '/' : `/${page}`);
+  };
 
   const addToast = (message, type = 'info', duration = 3000) => {
     const toast = { message, type, duration };
@@ -145,7 +158,8 @@ export function AppProvider({ children }) {
   const contextValue = {
     ...state,
     dispatch,
-    addToast
+    addToast,
+    navigateToPage // Add the navigation function to context
   };
 
   return (

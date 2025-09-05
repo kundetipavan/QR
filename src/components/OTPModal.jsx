@@ -1,30 +1,47 @@
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
-import { useApp } from '../contexts/AppContext';
 
-export function OTPModal() {
-  const { showOTPModal, phoneNumber, otpValue, dispatch, addToast } = useApp();
+export function OTPModal({ showOTPModal, onClose }) {
   const [otpStep, setOtpStep] = useState('phone'); // 'phone' or 'otp'
   const [localPhoneNumber, setLocalPhoneNumber] = useState('');
   const [localOtpValue, setLocalOtpValue] = useState(['', '', '', '', '', '']);
+  const [name, setName] = useState('');
+  const [loading, setLoading] = useState(false);
 
   if (!showOTPModal) return null;
 
-  const handleGetOTP = () => {
+  // Call backend to send OTP
+  const handleGetOTP = async () => {
     if (localPhoneNumber.length >= 10) {
-      dispatch({ type: 'SET_PHONE_NUMBER', payload: localPhoneNumber });
-      setOtpStep('otp');
-      addToast('OTP Sent to your number', 'info');
+      try {
+        setLoading(true);
+        const res = await fetch("http://localhost:5000/send-otp", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ phoneNumber: localPhoneNumber, name }),
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert("OTP Sent to your number");
+          setOtpStep("otp");
+        } else {
+          alert(data.message || "Failed to send OTP");
+        }
+      } catch (error) {
+        alert("Error sending OTP");
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
+  // Handle OTP input
   const handleOtpChange = (index, value) => {
     if (value.length <= 1 && /^\d*$/.test(value)) {
       const newOtp = [...localOtpValue];
       newOtp[index] = value;
       setLocalOtpValue(newOtp);
-      
-      // Auto-focus next input
+
       if (value && index < 5) {
         const nextInput = document.getElementById(`otp-${index + 1}`);
         if (nextInput) nextInput.focus();
@@ -32,29 +49,31 @@ export function OTPModal() {
     }
   };
 
-  const handleVerifyOTP = () => {
+  // Verify OTP with backend
+  const handleVerifyOTP = async () => {
     const otp = localOtpValue.join('');
-    dispatch({ type: 'SET_OTP_VALUE', payload: otp });
-    
-    if (otp === '123456') {
-      dispatch({ type: 'VERIFY_OTP', payload: true });
-      addToast('OTP Verified Successfully', 'success');
-      
-      // Add the item to cart
-      if (window.tempCartItem) {
-        dispatch({ type: 'ADD_TO_CART', payload: window.tempCartItem });
-        addToast('Item Added to Cart Successfully', 'success');
-        delete window.tempCartItem;
-      }
-      
-      setTimeout(() => {
-        dispatch({ type: 'HIDE_OTP_MODAL' });
-        setOtpStep('phone');
+    try {
+      setLoading(true);
+      const res = await fetch("http://localhost:5000/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phoneNumber: localPhoneNumber, otp }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        alert("OTP Verified Successfully");
+        onClose(); // close modal
+        setOtpStep("phone");
         setLocalPhoneNumber('');
         setLocalOtpValue(['', '', '', '', '', '']);
-      }, 1000);
-    } else {
-      addToast('Invalid OTP. Please try again.', 'error');
+        setName('');
+      } else {
+        alert(data.message || "Invalid OTP");
+      }
+    } catch (error) {
+      alert("Error verifying OTP");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -63,16 +82,11 @@ export function OTPModal() {
       <div className="bg-white rounded-lg w-full max-w-md p-6 transform transition-all duration-300">
         <div className="flex justify-between items-center mb-6">
           <div className="text-center flex-1">
-            <h2 className="text-xl font-bold text-gray-900">Sign In</h2>
+            <h2 className="text-xl font-bold text-gray-900">Customer Information </h2>
             <p className="text-gray-600 text-sm">to complete your order</p>
           </div>
           <button
-            onClick={() => {
-              dispatch({ type: 'HIDE_OTP_MODAL' });
-              setOtpStep('phone');
-              setLocalPhoneNumber('');
-              setLocalOtpValue(['', '', '', '', '', '']);
-            }}
+            onClick={onClose}
             className="text-gray-400 hover:text-gray-600 transition-colors"
           >
             <X className="h-6 w-6" />
@@ -82,7 +96,18 @@ export function OTPModal() {
         {otpStep === 'phone' ? (
           <>
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2 ml-1">
+                Name
+              </label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Enter your Name"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              />
+
+              <label className="block text-sm font-medium text-gray-700 mb-2 mt-4 ml-1" >
                 Phone Number
               </label>
               <input
@@ -96,10 +121,10 @@ export function OTPModal() {
             
             <button
               onClick={handleGetOTP}
-              disabled={localPhoneNumber.length < 10}
+              disabled={localPhoneNumber.length < 10 || loading}
               className="w-full bg-red-500 hover:bg-red-600 disabled:bg-gray-300 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200"
             >
-              Get OTP
+              {loading ? "Sending..." : "Get OTP"}
             </button>
           </>
         ) : (
@@ -122,7 +147,7 @@ export function OTPModal() {
                 ))}
               </div>
               <div className="flex justify-between items-center mt-3 text-sm">
-                <span className="text-gray-600">OTP sent to +1 {localPhoneNumber}</span>
+                <span className="text-gray-600">OTP sent to +91 {localPhoneNumber}</span>
                 <button className="text-red-500 hover:text-red-600 font-medium">
                   Resend OTP
                 </button>
@@ -131,35 +156,14 @@ export function OTPModal() {
             
             <button
               onClick={handleVerifyOTP}
-              disabled={localOtpValue.join('').length !== 6}
+              disabled={localOtpValue.join('').length !== 6 || loading}
               className="w-full bg-red-500 hover:bg-red-600 disabled:bg-gray-300 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200"
             >
-              Sign In
+              {loading ? "Verifying..." : "Sign In"}
             </button>
           </>
         )}
 
-        <div className="mt-6 text-center">
-          <p className="text-gray-600 text-sm mb-4">Or continue with</p>
-          <div className="flex justify-center space-x-4">
-            <button className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors">
-              <span className="text-lg font-bold">G</span>
-            </button>
-            <button className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors">
-              <span className="text-lg">🍎</span>
-            </button>
-            <button className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors">
-              <span className="text-lg">f</span>
-            </button>
-          </div>
-          <div className="mt-4 space-y-2 text-sm">
-            <button className="text-gray-600 hover:text-red-500">Forgot Password?</button>
-            <div className="text-gray-600">
-              Don't have an account? 
-              <button className="text-red-500 hover:text-red-600 ml-1">Sign Up</button>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );

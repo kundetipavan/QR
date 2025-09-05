@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { MenuCard } from "./MenuCard"; 
+import { MenuCard } from "../MenuCard"; 
 
 function Disserts() {
     const [selectedCategory, setSelectedCategory] = useState('biryani');
