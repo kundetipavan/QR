@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { Star, Plus } from "lucide-react";
- import { useNavigate } from "react-router-dom";
- export function MenuCard({ item }) {
-   const navigate = useNavigate();
-   onclick();
+import { useNavigate } from "react-router-dom";
 
+export function MenuCard({ item }) {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate("/item", { state: { item } });
+  };
 
   return (
     <>
@@ -18,7 +21,6 @@ import { Star, Plus } from "lucide-react";
             alt={item.name}
             className="w-full h-24 sm:h-32 md:h-40 object-cover"
           />
-
         </div>
 
         <div className="p-2 sm:p-3 md:p-4">
@@ -48,12 +50,12 @@ import { Star, Plus } from "lucide-react";
           </div>
 
           <button
-            onClick={() => navigate("/itemdetails")}
+            onClick={handleClick}
             className="w-full bg-red-500 hover:bg-red-600 text-white font-medium
             py-1 sm:py-1.5 md:py-2 px-2 sm:px-3 md:px-4 rounded-lg
             transition-colors duration-200 flex items-center justify-center
             space-x-1 sm:space-x-2 text-[10px] sm:text-xs md:text-sm"
-            >
+          >
             <Plus className="h-3 w-3 sm:h-4 sm:w-4" />
             <span>Add to Cart</span>
           </button>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
- {/*import { Navbar } from './components/Navbar'; */ }
+import { AppProvider, useApp } from './contexts/AppContext';
+{/*import { Navbar } from './components/Navbar'; */ }
 import { BottomNavigation } from './components/BottomNavigation';
 import { HomePage } from './components/HomePage';
 import { MenuPage } from './components/MenuPage';
@@ -11,7 +12,7 @@ import { OrderTrackingPage } from './components/OrderTrackingPage';
 import { ReceiptPage } from './components/ReceiptPage';
 import Disserts from './components/categories/disserts';
 import { MenuCardDetail } from './components/MenuCardDetail';
-import { ItemDetailsModal } from './components/ItemDetails';
+import { ItemDetails } from './components/ItemDetails';
 import { OTPModal } from './components/OTPModal';
 
 function AppContent() {
@@ -37,7 +38,9 @@ function AppContent() {
 
       {/* {!isHomePage &&  <Navbar />} */}
 
- 
+      <main className="relative">
+        {renderPage()}
+      </main>
 
       {!isHomePage && <BottomNavigation />}
 
@@ -49,9 +52,7 @@ function AppContent() {
         <Route path="/tracking" element={<OrderTrackingPage />} />
         <Route path="/receipt" element={<ReceiptPage />} />
         <Route path="/pizza" element={<Disserts />} />
-        <Route path="/itemdetails" element={<ItemDetailsModal />} />
-        <Route path="/otp" element={<OTPModal />} />
-      
+        <Route path="/item" element={<ItemDetails />} />
        </Routes>
     </div>
   );
@@ -60,19 +61,23 @@ function AppContent() {
 function App() {
   return (
     <BrowserRouter>
-   <ItemDetailsModal />
+       <AppProvider>
+              <OTPModal />
+
         <Routes>
           <Route path="/" element={<Navigate to="/home" replace />} />
           <Route path="/home/*" element={<AppContent />} />
           <Route path="/menu/*" element={<AppContent />} />
-          <Route path="/cart/*" element={<AppContent />} />
+          <Route path="/cart/*" element={<CartPage />} />
           <Route path="/orders/*" element={<AppContent />} />
           <Route path="/payment/*" element={<AppContent />} />
           <Route path="/tracking/*" element={<AppContent />} />
           <Route path="/receipt/*" element={<AppContent />} />
+          <Route path="/item" element={<ItemDetails />} />
          </Routes>
 
-     </BrowserRouter>
+      </AppProvider>
+    </BrowserRouter>
   );
 }
 

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { X, Minus, Plus, Star } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-export function ItemDetailsModal({ item }) {
+export function ItemDetails({ item }) {
   const [size, setSize] = useState("Medium");
   const [spice, setSpice] = useState("Mild");
   const [quantity, setQuantity] = useState(1);
