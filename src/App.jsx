@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AppProvider, useApp } from './contexts/AppContext';
 import { Navbar } from './components/Navbar';
 import { BottomNavigation } from './components/BottomNavigation';
@@ -10,11 +10,10 @@ import { OrdersPage } from './components/OrdersPage';
 import { PaymentPage } from './components/PaymentPage';
 import { OrderTrackingPage } from './components/OrderTrackingPage';
 import { ReceiptPage } from './components/ReceiptPage';
+  import { TopNavigation } from './components/TopNavigation';
+import Disserts from './components/disserts';
 import { ItemDetailsModal } from './components/ItemDetailsModal';
-import { OTPModal } from './components/OTPModal';
-import { Toast } from './components/Toast';
-import { TopNavigation } from './components/TopNavigation';
-
+ 
 function AppContent() {
   const { currentPage } = useApp();
 
@@ -22,54 +21,59 @@ function AppContent() {
     switch (currentPage) {
       case 'home': return <HomePage />;
       case 'menu': return <MenuPage />;
-      case 'cart': return <CartPage />;
-      case 'orders': return <OrdersPage />;
+       case 'orders': return <OrdersPage />;
       case 'payment': return <PaymentPage />;
-      case 'tracking': return <OrderTrackingPage />;
-      case 'receipt': return <ReceiptPage />;
-      case 'itemdetails': return <ItemDetailsModal />;
-      default: return <HomePage />;
+       default: return <HomePage />;
     }
   };
 
   const isHomePage = currentPage === 'home';
 
   return (
-    
-    <div className="min-h-screen bg-gray-50">
-            <TopNavigation />
 
-      {/* Show Navbar only if NOT home */}
-      {!isHomePage && <Navbar />}
-      
+    <div className="min-h-screen bg-gray-50">
+
+      <TopNavigation />
+
+      {!isHomePage &&  <Disserts /> }
+ 
+       {!isHomePage && <Navbar />}
+
       <main className="relative">
         {renderPage()}
       </main>
 
-      {/* Show BottomNavigation only if NOT home */}
-      {!isHomePage && <BottomNavigation />}
-       
-      {/* Modals */}
-      <ItemDetailsModal />
-      <OTPModal />
-      
-      {/* Toast Notifications */}
-      <Toast />
-              <Router>
-      <Routes>
-         <Route path="/pizza" element={<ItemDetailsModal />} />
-       </Routes>
-    </Router>
+       {!isHomePage && <BottomNavigation />}
 
-    </div>
+  
+       <Routes>
+        <Route path="/cart" element={< ItemDetailsModal />} />
+        <Route path="/tracking" element={<OrderTrackingPage />} />
+        <Route path="/itemdetails" element={<ItemDetailsModal />} />
+        <Route path="/receipt" element={<ReceiptPage />} />
+        <Route path="/pizza" element={<Disserts />} />
+        </Routes>
+       </div>
   );
 }
 
 function App() {
   return (
-    <AppProvider>
-      <AppContent />
-    </AppProvider>
+    <BrowserRouter>
+      <AppProvider>
+        <Routes>
+          <Route path="/" element={<Navigate to="/home" replace />} />
+          <Route path="/home/*" element={<AppContent />} />
+          <Route path="/menu/*" element={<AppContent />} />
+          <Route path="/cart/*" element={<AppContent />} />
+          <Route path="/orders/*" element={<AppContent />} />
+          <Route path="/payment/*" element={<AppContent />} />
+          <Route path="/tracking/*" element={<AppContent />} />
+          <Route path="/receipt/*" element={<AppContent />} />
+           <Route path="*" element={<Navigate to="/home" replace />} />
+        </Routes>
+      </AppProvider>
+    </BrowserRouter>
   );
 }
 

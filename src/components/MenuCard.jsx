@@ -1,19 +1,30 @@
 import React from "react";
 import { Star, Plus } from "lucide-react";
- 
-export function MenuCard({ item, onClick }) {
-  const handleAddToCart = (e) => {
-    e.stopPropagation();
-    onClick();
-     navigate("/itemdetails");
-  };
+import { useApp } from "../contexts/AppContext";
+  
+export function MenuCard({ item }) {
+  const { dispatch, addToast } = useApp();
 
+  const handleAddToCart = () => {
+    const cartItem = {
+      id: `${item.id}-${Date.now()}`,
+      menuItem: item,
+      quantity: 1,
+      price: item.price,
+      size: item.sizes ? item.sizes[0].name : null,
+      spiceLevel: 'medium'
+    };
+    
+    dispatch({ type: 'ADD_TO_CART', payload: cartItem });
+    addToast('Item added to cart', 'success');
+    dispatch({ type: 'SET_PAGE', payload: 'orders' });
+  };
+ 
   return (
     <div
       className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer transform overflow-hidden
                  w-full h-auto min-h-[200px] sm:min-h-[230px] md:min-h-[260px]"
-      onClick={onClick}
-    >
+     >
       <div className="relative">
         <img
           src={item.image}
@@ -31,7 +42,7 @@ export function MenuCard({ item, onClick }) {
           <div className="flex items-center text-yellow-500">
             <Star className="h-3 w-3 sm:h-4 sm:w-4 fill-current" />
             <span className="text-[10px] sm:text-xs md:text-sm text-gray-600 ml-1">
-              4.5
+              4.2
             </span>
           </div>
         </div>
@@ -50,16 +61,16 @@ export function MenuCard({ item, onClick }) {
         </div>
 
           <button
-          onClick={handleAddToCart}
-          className="w-full bg-red-500 hover:bg-red-600 text-white font-medium 
+            onClick={handleAddToCart}
+            className="w-full bg-red-500 hover:bg-red-600 text-white font-medium 
                      py-1 sm:py-1.5 md:py-2 px-2 sm:px-3 md:px-4 rounded-lg 
                      transition-colors duration-200 flex items-center justify-center 
                      space-x-1 sm:space-x-2 text-[10px] sm:text-xs md:text-sm"
-        >
-          <Plus className="h-3 w-3 sm:h-4 sm:w-4" />
-          <span>Add to Cart</span>
-        </button>
-      </div>
+          >
+            <Plus className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span>Add to Cart</span>
+          </button>
+       </div>
     </div>
   );
 }

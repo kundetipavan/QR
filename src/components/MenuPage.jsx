@@ -3,8 +3,7 @@ import { Search, Mic } from 'lucide-react';
 import { MenuCard } from './MenuCard';
 import { useApp } from '../contexts/AppContext';
 import { Pizza, Sandwich, Croissant, Utensils } from "lucide-react"; 
-import { useNavigate } from "react-router-dom";
-
+import { useNavigate, useNavigation } from "react-router-dom";
 
 
 export function MenuPage() {
@@ -15,6 +14,9 @@ export function MenuPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { dispatch } = useApp();
+    const navigate = useNavigate();
+
+
 
   // Carousel state
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -120,17 +122,17 @@ export function MenuPage() {
       </div>
 
       {/* Browse by Category */}
-<div className="mb-6">
+      <div className="mb-6">
   <div className="flex space-x-4 overflow-x-auto pb-2 scrollbar-hide">
     {[
-      { name: "Pizza", icon: <Pizza className="text-2xl text-orange-600 hover:text-black-600"  /> },
-      { name: "Burger", icon: <Sandwich className="text-2xl text-orange-600" /> },
-      { name: "Bakery", icon: <Croissant className="text-2xl text-orange-500" /> },
-      { name: "Biryani", icon: <Utensils className="text-2xl text-orange-600" /> },
+      { name: "Pizza", icon: <Pizza className="text-2xl text-orange-600 hover:text-black-600" />, path: "/pizza" },
+      { name: "Burger", icon: <Sandwich className="text-2xl text-orange-600" />, path: "/burger" },
+      { name: "Bakery", icon: <Croissant className="text-2xl text-orange-500" />, path: "/bakery" },
+      { name: "Biryani", icon: <Utensils className="text-2xl text-orange-600" />, path: "/biryani" },
     ].map((cat) => (
       <button
         key={cat.name}
-        onClick={() => setSelectedCategory(cat.name)}
+        onClick={() => navigate(cat.path)}
         className={`flex flex-col items-center justify-center flex-shrink-0 w-20 h-20  
           ${selectedCategory === cat.name ? "" : "text-gray-600"}`}
       >

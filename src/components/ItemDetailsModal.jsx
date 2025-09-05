@@ -162,3 +162,4 @@ export function ItemDetailsModal() {
     </div>
   );
 }
+export default ItemDetailsModal;

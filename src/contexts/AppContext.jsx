@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const AppContext = createContext();
 
@@ -31,7 +32,7 @@ function appReducer(state, action) {
       return { 
         ...state, 
         selectedMenuItem: null, 
-        showItemModal: false 
+        showItemModal: true 
       };
     
     case 'SHOW_OTP_MODAL':
@@ -119,10 +120,16 @@ function appReducer(state, action) {
 
 export function AppProvider({ children }) {
   const [state, dispatch] = useReducer(appReducer, initialState);
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch({ type: 'LOAD_PERSISTED_DATA' });
   }, []);
+
+  // Add navigation effect
+  useEffect(() => {
+    navigate(`/${state.currentPage}`);
+  }, [state.currentPage, navigate]);
 
   const addToast = (message, type = 'info', duration = 3000) => {
     const toast = { message, type, duration };

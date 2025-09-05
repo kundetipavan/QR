@@ -5,7 +5,7 @@ import { useApp } from '../contexts/AppContext';
 export function CartPage() {
   const { cart, dispatch, addToast } = useApp();
 
-  const subtotal = cart.reduce((total, item) => total + item.price, 0);
+  const subtotal = cart.reduce((total, item) => total + (Number(item.price) || 0), 0);
   const tax = subtotal * 0.08; // 8% tax
   const total = subtotal + tax;
 
@@ -77,17 +77,19 @@ export function CartPage() {
         {cart.map((item) => (
           <div key={item.id} className="bg-white rounded-lg shadow-md p-4">
             <div className="flex items-start space-x-4">
-              <img 
-                src={item.menuItem.image} 
-                alt={item.menuItem.name}
-                className="w-20 h-20 object-cover rounded-lg"
-              />
+              {item.menuItem?.image && (
+                <img 
+                  src={item.menuItem.image} 
+                  alt={item.menuItem?.name || 'Menu Item'}
+                  className="w-20 h-20 object-cover rounded-lg"
+                />
+              )}
               
               <div className="flex-1">
-                <h3 className="font-semibold text-gray-900">{item.menuItem.name}</h3>
+                <h3 className="font-semibold text-gray-900">{item.menuItem?.name || 'Unknown Item'}</h3>
                 <div className="text-sm text-gray-600 space-y-1 mt-1">
-                  <p>Size: {item.size}</p>
-                  <p>Spice Level: {item.spiceLevel}</p>
+                  {item.size && <p>Size: {item.size}</p>}
+                  {item.spiceLevel && <p>Spice Level: {item.spiceLevel}</p>}
                   {item.specialInstructions && (
                     <p>Instructions: {item.specialInstructions}</p>
                   )}
@@ -96,7 +98,7 @@ export function CartPage() {
               
               <div className="text-right">
                 <div className="text-lg font-bold text-gray-900 mb-2">
-                  ${item.price.toFixed(2)}
+                  ${(Number(item.price) || 0).toFixed(2)}
                 </div>
                 
                 <div className="flex items-center space-x-2">
